@@ -94,6 +94,16 @@
     text-align: center;
     padding: 24px;
   }
+  .hero-video {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    margin: 40px 0 0;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: #0F172A;
+    display: block;
+  }
 
   /* CORE SERVICES */
   .services-section { background: var(--navy-soft); }
@@ -399,10 +409,18 @@
     <a href="tel:4012988551" class="btn btn-primary">Set Up a Demo</a>
     <a href="tel:4019346296" class="btn btn-secondary">📞 Call Parker Live (401) 934-6296</a>
   </div>
-  <div class="video-placeholder">
-    [ 18-second demo video placeholder ]<br><br>
-    Brett's call · Helm dashboard · "300 hour service needed"
-  </div>
+  <video
+    class="hero-video"
+    autoplay
+    muted
+    loop
+    playsinline
+    controls
+    preload="metadata"
+    aria-label="Parker demo — Brett's call and the Helm dashboard">
+    <source src="demo.mp4" type="video/mp4">
+    Your browser doesn't support inline video.
+  </video>
 </section>
 
 <!-- FOUR CORE SERVICES -->
