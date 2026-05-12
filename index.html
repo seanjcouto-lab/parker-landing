@@ -4,1030 +4,667 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Parker — Marine Shop Voice Agent</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="description" content="Parker answers every call, qualifies every lead, and builds your customer database — automatically. Marine-trained AI for shops that can't afford to miss the phone.">
 <style>
   :root {
-    --navy: #0A1726;
-    --navy-mid: #0f2035;
-    --navy-light: #152840;
-    --gold: #D8A24A;
-    --gold-light: #e8b86a;
-    --gold-dim: rgba(216,162,74,0.12);
-    --white: #f0f4f8;
-    --muted: #7a90a8;
-    --text: #c8d8e8;
-    --green: #3ecf8e;
-    --green-dim: rgba(62,207,142,0.1);
-    --red-dim: rgba(239,68,68,0.5);
+    --navy: #0B1622;
+    --navy-soft: #14213D;
+    --orange: #F4A93C;
+    --white: #FFFFFF;
+    --gray: #94A3B8;
+    --gray-light: #CBD5E1;
+    --red: #DC2626;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-
   body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--navy);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
+    color: var(--white);
     line-height: 1.6;
-    overflow-x: hidden;
   }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 48px;
-    background: rgba(10,23,38,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(216,162,74,0.15);
-  }
-
-  .nav-brand {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 3px;
-    color: var(--gold);
-  }
-
-  .nav-by {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
-
-  .nav-cta {
-    background: var(--gold);
-    color: var(--navy);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    padding: 10px 24px;
-    border: none;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    text-decoration: none;
-    transition: background 0.2s;
-  }
-
-  .nav-cta:hover { background: var(--gold-light); }
-
-  /* HERO — two-column grid: 45% text / 55% image. No overlap at any width ≥ 768px.
-     Mobile (<768px) stacks vertically, image below text, image max-height 50vh. */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: stretch;
-    background: var(--navy);
-  }
-
-  .hero-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  /* Overlay is kept as a tiny gradient feather on the SEAM between columns
-     (not across the text). Purely decorative; cannot cause text-image overlap
-     because it is positioned only over the image column. */
-  .hero-overlay {
-    grid-column: 2;
-    grid-row: 1;
-    pointer-events: none;
-    background: linear-gradient(
-      to right,
-      rgba(10,23,38,0.35) 0%,
-      rgba(10,23,38,0.0) 15%,
-      rgba(10,23,38,0.0) 100%
-    );
-  }
-
-  .hero-content {
-    grid-column: 1;
-    grid-row: 1;
-    width: 100%;
-    padding: 120px 48px 80px;
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-  }
-
-  .hero-inner {
-    max-width: 640px;
-    width: 100%;
-  }
-
-  @media (max-width: 767px) {
-    .hero {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto auto;
-      min-height: 0;
-    }
-    .hero-content {
-      grid-column: 1;
-      grid-row: 1;
-      padding: 96px 24px 40px;
-    }
-    .hero-img {
-      grid-column: 1;
-      grid-row: 2;
-      max-height: 50vh;
-    }
-    .hero-overlay {
-      grid-column: 1;
-      grid-row: 2;
-      background: linear-gradient(
-        to bottom,
-        rgba(10,23,38,0.3) 0%,
-        rgba(10,23,38,0.0) 20%
-      );
-    }
-  }
-
-  .hero-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--gold);
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 80px 0; }
+  .section-tag {
+    font-size: 13px;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
+    color: var(--orange);
     margin-bottom: 16px;
-    opacity: 0;
-    animation: fadeUp 0.6s 0.2s forwards;
-  }
-
-  .hero h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(42px, 6vw, 84px);
-    line-height: 0.95;
-    letter-spacing: 1px;
-    color: var(--white);
-    max-width: 780px;
-    opacity: 0;
-    animation: fadeUp 0.7s 0.35s forwards;
-  }
-
-  .hero h1 span { color: var(--gold); }
-
-  .hero-sub {
-    font-size: 17px;
-    font-weight: 300;
-    color: var(--text);
-    max-width: 500px;
-    margin-top: 24px;
-    line-height: 1.7;
-    opacity: 0;
-    animation: fadeUp 0.7s 0.5s forwards;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: 16px;
-    margin-top: 40px;
-    flex-wrap: wrap;
-    align-items: center;
-    opacity: 0;
-    animation: fadeUp 0.7s 0.65s forwards;
-  }
-
-  .btn-primary {
-    background: var(--gold);
-    color: var(--navy);
-    font-weight: 700;
-    font-size: 15px;
-    padding: 16px 36px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    letter-spacing: 0.5px;
-    transition: all 0.2s;
-    display: inline-block;
-  }
-
-  .btn-primary:hover {
-    background: var(--gold-light);
-    transform: translateY(-2px);
-  }
-
-  .demo-call {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 24px;
-    background: var(--green-dim);
-    border: 1px solid rgba(62,207,142,0.3);
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-
-  .demo-call:hover {
-    border-color: var(--green);
-    background: rgba(62,207,142,0.15);
-  }
-
-  .pulse-dot {
-    width: 10px; height: 10px;
-    background: var(--green);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-    flex-shrink: 0;
-  }
-
-  .demo-call-text { display: flex; flex-direction: column; }
-
-  .demo-call-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--green);
-    text-transform: uppercase;
-  }
-
-  .demo-call-number {
-    font-size: 16px;
     font-weight: 600;
+  }
+  h1 { font-size: 56px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 24px; }
+  h2 { font-size: 42px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 24px; }
+  h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+  p.subhead { font-size: 20px; color: var(--gray-light); margin-bottom: 32px; }
+
+  /* HEADER */
+  header {
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky;
+    top: 0;
+    background: rgba(11,22,34,0.95);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+  }
+  .header-inner { display: flex; justify-content: space-between; align-items: center; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: var(--navy-soft);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 900; font-style: italic;
     color: var(--white);
-    letter-spacing: 1px;
+  }
+  .logo-text { display: flex; flex-direction: column; }
+  .logo-name { font-weight: 800; font-size: 18px; letter-spacing: 0.05em; }
+  .logo-tagline { font-size: 11px; color: var(--gray); }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 16px;
+    transition: transform 0.1s;
+    cursor: pointer;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--orange); color: var(--navy); }
+  .btn-secondary { background: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.2); }
+  .btn-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
+
+  /* HERO */
+  .hero { padding: 80px 0 60px; }
+  .hero-meta { color: var(--orange); font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; font-weight: 600; }
+  .video-placeholder {
+    width: 100%; max-width: 360px;
+    margin: 40px 0 0;
+    aspect-ratio: 9/16;
+    background: linear-gradient(135deg, #1E293B, #0F172A);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--gray);
+    font-size: 14px;
+    text-align: center;
+    padding: 24px;
   }
 
-  @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(62,207,142,0.4); }
-    50% { box-shadow: 0 0 0 8px rgba(62,207,142,0); }
+  /* CORE SERVICES */
+  .services-section { background: var(--navy-soft); }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 40px;
   }
-
-  /* SECTION SHARED */
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 20px;
+  .service-card {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 28px 24px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-top: 3px solid var(--orange);
   }
-
-  /* COST */
-  .cost {
-    padding: 100px 48px;
-    background: var(--navy-mid);
+  .service-num {
+    font-size: 12px;
+    color: var(--orange);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
   }
-
-  .cost h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 5vw, 60px);
-    letter-spacing: 1px;
+  .service-card h3 {
+    font-size: 17px;
     color: var(--white);
-    line-height: 1.05;
-    max-width: 700px;
-    margin-bottom: 56px;
+    margin-bottom: 10px;
   }
+  .service-card p { color: var(--gray-light); font-size: 14px; line-height: 1.5; }
 
-  .cost-compare {
+  /* MATH SECTION */
+  .math-grid {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    max-width: 800px;
+    gap: 32px;
     align-items: stretch;
+    margin-top: 40px;
   }
-
-  .cost-col {
-    background: var(--navy-light);
-    padding: 40px;
+  .math-card {
+    background: var(--navy-soft);
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid rgba(255,255,255,0.08);
   }
+  .math-card.parker { border-color: var(--orange); }
+  .math-card-label { font-size: 14px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+  .math-card-figure { font-size: 36px; font-weight: 800; color: var(--white); margin-bottom: 4px; }
+  .math-card.parker .math-card-figure { color: var(--orange); }
+  .math-card-sub { font-size: 14px; color: var(--gray-light); margin-bottom: 20px; }
+  .math-card ul { list-style: none; padding: 0; }
+  .math-card li { padding: 8px 0; font-size: 15px; color: var(--gray-light); position: relative; padding-left: 20px; }
+  .math-card li:before { content: "—"; position: absolute; left: 0; color: var(--orange); }
+  .vs { display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; color: var(--gray); }
 
-  .cost-col.bad { border-top: 3px solid var(--red-dim); }
-  .cost-col.good { border-top: 3px solid var(--green); }
+  /* INTAKE GRID */
+  .intake-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 40px;
+  }
+  .intake-card {
+    background: var(--navy-soft);
+    border-radius: 12px;
+    padding: 28px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .intake-icon { font-size: 36px; margin-bottom: 12px; }
+  .intake-card h3 { color: var(--white); margin-bottom: 8px; }
+  .intake-card p { color: var(--gray-light); font-size: 15px; }
 
-  .cost-col-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
+  /* HELM SECTION */
+  .helm-section { background: var(--navy-soft); }
+  .helm-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 50px;
+    align-items: start;
+  }
+  .helm-card {
+    text-align: center;
+  }
+  .helm-screenshot-img {
+    width: 100%;
+    border-radius: 12px;
+    border: 2px solid rgba(244,169,60,0.2);
+    margin-bottom: 20px;
+    display: block;
+  }
+  .helm-mobile-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .helm-mobile-card {
+    text-align: center;
+    max-width: 360px;
+  }
+  .helm-mobile-img {
+    width: 100%;
+    border-radius: 24px;
+    border: 2px solid rgba(244,169,60,0.2);
     margin-bottom: 20px;
   }
-
-  .cost-col.bad .cost-col-label { color: rgba(239,68,68,0.7); }
-  .cost-col.good .cost-col-label { color: var(--green); }
-
-  .cost-number {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 52px;
-    line-height: 1;
-    margin-bottom: 8px;
-    letter-spacing: 1px;
-  }
-
-  .cost-col.good .cost-number { font-size: 44px; }
-
-  .cost-col.bad .cost-number { color: rgba(239,68,68,0.8); }
-  .cost-col.good .cost-number { color: var(--green); }
-
-  .cost-period {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 24px;
-  }
-
-  .cost-items {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .cost-items li {
-    font-size: 14px;
-    color: var(--text);
-    padding-left: 16px;
-    position: relative;
-  }
-
-  .cost-items li::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 9px;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-  }
-
-  .cost-col.bad .cost-items li::before { background: rgba(239,68,68,0.5); }
-  .cost-col.good .cost-items li::before { background: var(--green); }
-
-  .cost-vs {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 20px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    color: var(--muted);
-    letter-spacing: 2px;
+  .helm-caption { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+  .helm-card p, .helm-mobile-card p { color: var(--gray-light); font-size: 14px; }
+  .helm-domain {
+    display: inline-block;
+    background: var(--navy);
+    color: var(--orange);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 16px;
+    margin-top: 12px;
   }
 
   /* HOW IT WORKS */
-  .how {
-    padding: 100px 48px;
-    background: var(--navy);
-  }
-
-  .how h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 5vw, 60px);
-    letter-spacing: 1px;
-    color: var(--white);
-    line-height: 1.05;
-    margin-bottom: 56px;
-  }
-
   .steps {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2px;
-    max-width: 960px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-top: 40px;
   }
-
   .step {
-    background: var(--navy-light);
-    padding: 36px 32px;
-    position: relative;
+    background: var(--navy-soft);
+    border-radius: 12px;
+    padding: 32px;
+    border: 1px solid rgba(255,255,255,0.06);
   }
-
   .step-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    color: var(--gold);
-    opacity: 0.25;
-    line-height: 1;
-    margin-bottom: 16px;
-  }
-
-  .step-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 10px;
-  }
-
-  .step-desc {
     font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
+    color: var(--orange);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
   }
+  .step h3 { margin-bottom: 12px; }
+  .step p { color: var(--gray-light); font-size: 15px; }
 
-  /* WHY MARINE */
-  .why {
-    padding: 100px 48px;
-    background: var(--navy-mid);
-  }
-
-  .why h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 5vw, 60px);
-    letter-spacing: 1px;
-    color: var(--white);
-    line-height: 1.05;
-    margin-bottom: 56px;
-  }
-
-  .why-grid {
+  /* INDUSTRY GRID */
+  .industry-section { background: var(--navy-soft); }
+  .industry-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 2px;
-    max-width: 960px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
   }
-
-  .why-card {
-    background: var(--navy-light);
-    padding: 36px 32px;
-    border-top: 2px solid var(--gold-dim);
-    transition: border-color 0.2s;
-  }
-
-  .why-card:hover { border-top-color: var(--gold); }
-
-  .why-card h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 12px;
-  }
-
-  .why-card p {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-  }
-
-  /* WHAT PARKER CAPTURES */
-  .captures {
-    padding: 100px 48px;
+  .industry-card {
     background: var(--navy);
+    padding: 28px;
+    border-radius: 12px;
+    border-left: 3px solid var(--orange);
   }
+  .industry-card h3 { color: var(--white); margin-bottom: 12px; font-size: 18px; }
+  .industry-card p { color: var(--gray-light); font-size: 15px; }
 
-  .captures h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 5vw, 60px);
-    letter-spacing: 1px;
-    color: var(--white);
-    line-height: 1.05;
-    margin-bottom: 16px;
+  /* TESTIMONIALS */
+  .testimonial {
+    background: var(--navy-soft);
+    border-radius: 16px;
+    padding: 40px;
+    border-left: 4px solid var(--orange);
+    margin-top: 32px;
   }
-
-  .captures-sub {
-    font-size: 16px;
-    color: var(--muted);
-    max-width: 560px;
-    margin-bottom: 56px;
-    line-height: 1.7;
-  }
-
-  .capture-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 2px;
-    max-width: 960px;
-  }
-
-  .capture-item {
-    background: var(--navy-light);
-    padding: 28px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .capture-icon {
-    font-size: 22px;
-    margin-bottom: 4px;
-  }
-
-  .capture-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--gold);
-    text-transform: uppercase;
-  }
-
-  .capture-desc {
-    font-size: 13px;
-    color: var(--muted);
+  .testimonial-quote {
+    font-size: 19px;
     line-height: 1.6;
-  }
-
-
-  /* DELIVERY OPTIONS */
-  .delivery-wrap {
-    max-width: 960px;
-    margin-top: 64px;
-    padding-top: 64px;
-    border-top: 1px solid rgba(216,162,74,0.15);
-  }
-
-  .delivery-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    letter-spacing: 2px;
     color: var(--white);
-    margin-bottom: 32px;
+    font-style: italic;
+    margin-bottom: 20px;
   }
-
-  .delivery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2px;
-  }
-
-  .delivery-item {
-    background: var(--navy-light);
-    padding: 28px 24px;
-    position: relative;
-    border-top: 2px solid transparent;
-  }
-
-  .delivery-item.live { border-top-color: var(--green); }
-  .delivery-item.coming { border-top-color: rgba(216,162,74,0.3); }
-
-  .delivery-status {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-
-  .delivery-item.live .delivery-status { color: var(--green); }
-  .delivery-item.coming .delivery-status { color: rgba(216,162,74,0.6); }
-
-  .delivery-method {
-    font-size: 18px;
-    font-weight: 600;
+  .testimonial-author {
+    font-weight: 700;
     color: var(--white);
-    margin-bottom: 10px;
+    font-size: 16px;
   }
-
-  .delivery-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.7;
+  .testimonial-title {
+    color: var(--gray);
+    font-size: 14px;
+    margin-top: 4px;
   }
 
   /* PRICING */
-  .pricing {
-    padding: 100px 48px;
-    background: var(--navy-mid);
-  }
-
-  .pricing h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 5vw, 60px);
-    letter-spacing: 1px;
-    color: var(--white);
-    line-height: 1.05;
-    margin-bottom: 12px;
-  }
-
-  .pricing-sub {
-    font-size: 16px;
-    color: var(--muted);
-    max-width: 480px;
-    margin-bottom: 48px;
-    line-height: 1.7;
-  }
-
   .pricing-card {
-    background: var(--navy-light);
-    border: 1px solid rgba(216,162,74,0.2);
-    border-top: 3px solid var(--gold);
+    background: var(--navy-soft);
+    border: 2px solid var(--orange);
+    border-radius: 20px;
     padding: 48px;
-    max-width: 480px;
+    max-width: 520px;
+    margin: 40px auto 0;
   }
-
-  .pricing-badge {
-    display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    border: 1px solid rgba(216,162,74,0.3);
-    padding: 4px 12px;
-    margin-bottom: 28px;
-  }
-
-  .pricing-price {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 80px;
-    color: var(--white);
-    line-height: 1;
-    letter-spacing: 2px;
-  }
-
-  .pricing-period {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-top: 4px;
-    margin-bottom: 36px;
-  }
-
-  .pricing-items {
-    list-style: none;
-    margin-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .pricing-items li {
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    font-size: 15px;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .pricing-items li::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    flex-shrink: 0;
-  }
-
-  .pricing-note {
+  .pricing-label {
+    color: var(--orange);
     font-size: 13px;
-    color: var(--muted);
-    margin-top: 20px;
-    line-height: 1.7;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 16px;
   }
-
-  /* CTA */
-  .cta-section {
-    padding: 120px 48px;
-    background: var(--navy);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cta-section::before {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(216,162,74,0.05) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .cta-section h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(42px, 6vw, 80px);
-    letter-spacing: 2px;
-    color: var(--white);
-    max-width: 700px;
-    margin: 0 auto 16px;
+  .pricing-amount {
+    font-size: 72px;
+    font-weight: 800;
     line-height: 1;
-    position: relative;
+    margin-bottom: 8px;
   }
-
-  .cta-section h2 span { color: var(--gold); }
-
-  .cta-section p {
-    font-size: 16px;
-    color: var(--muted);
-    margin-bottom: 52px;
-    position: relative;
-  }
-
-  .cta-buttons {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    flex-wrap: wrap;
-    position: relative;
-  }
-
-  .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    padding: 16px 36px;
-    border: 1px solid rgba(216,162,74,0.3);
-    color: var(--text);
-    text-decoration: none;
+  .pricing-period { color: var(--gray-light); font-size: 16px; margin-bottom: 32px; }
+  .pricing-list { list-style: none; padding: 0; margin: 0 0 32px; }
+  .pricing-list li {
+    padding: 10px 0;
+    color: var(--gray-light);
     font-size: 15px;
-    transition: all 0.2s;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-left: 28px;
+    position: relative;
+  }
+  .pricing-list li:before {
+    content: "✓";
+    color: var(--orange);
+    position: absolute;
+    left: 0;
+    font-weight: 800;
+  }
+  .pricing-note {
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--gray);
+    font-style: italic;
+    text-align: center;
   }
 
-  .btn-ghost:hover {
-    border-color: var(--gold);
-    color: var(--gold);
+  /* FINAL CTA */
+  .final-cta {
+    background: var(--navy-soft);
+    text-align: center;
+    padding: 100px 24px;
   }
+  .final-cta h2 { margin-bottom: 20px; }
+  .final-cta p { color: var(--gray-light); font-size: 18px; margin-bottom: 32px; }
 
   /* FOOTER */
   footer {
-    padding: 32px 48px;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 60px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+  .footer-wheel {
+    width: 64px;
+    height: 64px;
+    background: var(--navy-soft);
+    border-radius: 50%;
+    margin: 0 auto 20px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
+    justify-content: center;
+    font-size: 32px;
   }
+  .footer-name { font-weight: 800; letter-spacing: 0.1em; margin-bottom: 8px; font-size: 18px; }
+  .footer-tagline { color: var(--gray); font-size: 14px; max-width: 400px; margin: 0 auto 20px; }
+  .footer-built { color: var(--gray); font-size: 13px; font-style: italic; }
 
-  .footer-brand { display: flex; flex-direction: column; gap: 2px; }
-
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 3px;
-    color: var(--gold);
-    opacity: 0.7;
+  /* MOBILE */
+  @media (max-width: 768px) {
+    h1 { font-size: 38px; }
+    h2 { font-size: 30px; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .math-grid { grid-template-columns: 1fr; }
+    .vs { padding: 12px 0; }
+    .intake-grid, .helm-grid, .steps, .industry-grid { grid-template-columns: 1fr; }
+    .pricing-amount { font-size: 56px; }
+    .pricing-card { padding: 32px; }
   }
-
-  .footer-by {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
-
-  footer p { font-size: 13px; color: var(--muted); }
-
-  footer a {
-    color: var(--gold);
-    text-decoration: none;
-    font-size: 13px;
-  }
-
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 640px) {
-    nav { padding: 16px 20px; }
-    /* .hero-content padding now governed by the <768px grid rule above. */
-    .cost, .how, .why, .captures, .pricing, .cta-section { padding: 72px 24px; }
-    footer { padding: 24px; }
-    .cost-compare { grid-template-columns: 1fr; }
-    .cost-vs { padding: 12px; text-align: center; }
-    .pricing-card { padding: 32px 24px; }
+  @media (max-width: 480px) {
+    .services-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-brand">
-    <div class="nav-logo">PARKER</div>
-    <div class="nav-by">by Jaxtr</div>
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">𝓟</div>
+        <div class="logo-text">
+          <div class="logo-name">PARKER</div>
+          <div class="logo-tagline">Built by a 30-year marine guy</div>
+        </div>
+      </div>
+      <a href="tel:4012988551" class="btn btn-primary">Set Up a Demo</a>
+    </div>
   </div>
-  <a href="https://setup.talktoparker.com" class="nav-cta">Set Up a Demo</a>
-</nav>
+</header>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-content">
-    <div class="hero-inner">
-      <div class="hero-eyebrow">AI Voice Agent — Marine Industry</div>
-      <h1>Not every job is<br>worth your time.<br><span>Parker filters out<br>the ones that aren't.</span></h1>
-      <p class="hero-sub">Every call answered. Every job screened. You only deal with the ones that matter.</p>
-      <div class="hero-actions">
-        <a href="https://setup.talktoparker.com" class="btn-primary">Set Up a Demo</a>
-        <a href="tel:4019346296" class="demo-call">
-          <div class="pulse-dot"></div>
-          <div class="demo-call-text">
-            <span class="demo-call-label">Call Parker Live</span>
-            <span class="demo-call-number">(401) 934-6296</span>
-          </div>
-        </a>
+<section class="hero container">
+  <div class="hero-meta">AI Voice Agent — Marine Industry</div>
+  <h1>Your phone is leaking money.<br>Parker stops the leak.</h1>
+  <p class="subhead">Every call answered. Every lead qualified. Every customer captured into a database you actually own. Twenty-four seven. Marine-trained.</p>
+  <div class="btn-row">
+    <a href="tel:4012988551" class="btn btn-primary">Set Up a Demo</a>
+    <a href="tel:4019346296" class="btn btn-secondary">📞 Call Parker Live (401) 934-6296</a>
+  </div>
+  <div class="video-placeholder">
+    [ 18-second demo video placeholder ]<br><br>
+    Brett's call · Helm dashboard · "300 hour service needed"
+  </div>
+</section>
+
+<!-- FOUR CORE SERVICES -->
+<section class="section services-section">
+  <div class="container">
+    <div class="section-tag">What Parker Does</div>
+    <h2>Four jobs. One flat rate. Twenty-four seven.</h2>
+    <p class="subhead">Most shops are paying for an answering service that only does one of these. Parker does all four.</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <h3>Captures Every Call</h3>
+        <p>No more voicemails customers won't leave. No more rings into the void. Every call answered, every time, including the ones that come in at 11 PM on a Sunday.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <h3>Qualifies Every Lead</h3>
+        <p>Marine-trained intake captures vessel, engine, symptom, and urgency in the customer's own words. You see the lead. You decide whether it's worth your time before you ever call back.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <h3>Builds Your Database</h3>
+        <p>Every caller becomes a customer record. Every call adds history. After six months you have a marketing list you actually own — names, numbers, boats, service patterns, repeat behavior.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <h3>Available 24/7</h3>
+        <p>Never sick. Never on lunch. Never on hold with a parts supplier when the next call comes in. Parker works the hours your shop can't and never asks for a raise.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- COST -->
-<section class="cost">
-  <div class="section-label">The Math</div>
-  <h2>One Missed Call In Rush Season<br>Costs More Than Parker.</h2>
-  <div class="cost-compare">
-    <div class="cost-col bad">
-      <div class="cost-col-label">Missed Call</div>
-      <div class="cost-number">$2,000+</div>
-      <div class="cost-period">lost revenue per job</div>
-      <ul class="cost-items">
-        <li>Phone rang. Nobody answered.</li>
-        <li>Customer called your competitor.</li>
-        <li>Job gone. Forever.</li>
-        <li>Happens every day in rush season.</li>
-      </ul>
-    </div>
-    <div class="cost-vs">VS</div>
-    <div class="cost-col good">
-      <div class="cost-col-label">Parker</div>
-      <div class="cost-number">Flat Rate</div>
-      <div class="cost-period">one monthly price. no surprises.</div>
-      <ul class="cost-items">
-        <li>Answers every call. Every time.</li>
-        <li>Screens and captures every lead.</li>
-        <li>You get the job.</li>
-        <li>Pays for itself the first booking.</li>
-      </ul>
+<!-- MATH -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">The Math</div>
+    <h2>One missed call in rush season costs more than Parker.</h2>
+    <div class="math-grid">
+      <div class="math-card">
+        <div class="math-card-label">Missed Call</div>
+        <div class="math-card-figure">$2,000+</div>
+        <div class="math-card-sub">lost revenue per job</div>
+        <ul>
+          <li>Phone rang. Nobody answered.</li>
+          <li>Customer called your competitor.</li>
+          <li>Job gone. Forever.</li>
+          <li>Happens every day in rush season.</li>
+        </ul>
+      </div>
+      <div class="vs">VS</div>
+      <div class="math-card parker">
+        <div class="math-card-label">Parker</div>
+        <div class="math-card-figure">Flat Rate</div>
+        <div class="math-card-sub">one monthly price. no surprises.</div>
+        <ul>
+          <li>Answers every call. Every time.</li>
+          <li>Screens and captures every lead.</li>
+          <li>You get the job.</li>
+          <li>Pays for itself the first booking.</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- WHAT PARKER CAPTURES -->
-<section class="captures">
-  <div class="section-label">Structured Intake</div>
-  <h2>Every Call. Every Detail.<br>Logged Automatically.</h2>
-  <p class="captures-sub">Parker doesn't just answer — it extracts the information your team needs before you ever pick up the phone.</p>
-  <div class="capture-grid">
-    <div class="capture-item">
-      <div class="capture-icon">👤</div>
-      <div class="capture-label">Customer</div>
-      <div class="capture-desc">Name and callback number captured every time.</div>
-    </div>
-    <div class="capture-item">
-      <div class="capture-icon">⚓</div>
-      <div class="capture-label">Vessel</div>
-      <div class="capture-desc">Make, model, and year of the boat.</div>
-    </div>
-    <div class="capture-item">
-      <div class="capture-icon">🔧</div>
-      <div class="capture-label">Engine</div>
-      <div class="capture-desc">Make, model, horsepower, serial number, and hours.</div>
-    </div>
-    <div class="capture-item">
-      <div class="capture-icon">🩺</div>
-      <div class="capture-label">Symptom</div>
-      <div class="capture-desc">What the customer says is wrong — in their own words.</div>
-    </div>
-    <div class="capture-item">
-      <div class="capture-icon">⚡</div>
-      <div class="capture-label">Urgency</div>
-      <div class="capture-desc">Is this a rush job or routine? Parker asks.</div>
-    </div>
-    <div class="capture-item">
-      <div class="capture-icon">📋</div>
-      <div class="capture-label">Delivered</div>
-      <div class="capture-desc">Every lead lands in your Google Sheet the moment the call ends.</div>
+<!-- STRUCTURED INTAKE -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Structured Intake</div>
+    <h2>Every call. Every detail. Logged automatically.</h2>
+    <p class="subhead">Parker doesn't just answer — it extracts the information your team needs before you ever pick up the phone.</p>
+    <div class="intake-grid">
+      <div class="intake-card">
+        <div class="intake-icon">👤</div>
+        <h3>Customer</h3>
+        <p>Name and callback number captured every time.</p>
+      </div>
+      <div class="intake-card">
+        <div class="intake-icon">⚓</div>
+        <h3>Vessel</h3>
+        <p>Make, model, and year of the boat.</p>
+      </div>
+      <div class="intake-card">
+        <div class="intake-icon">🔧</div>
+        <h3>Engine</h3>
+        <p>Make, model, horsepower, serial number, and hours.</p>
+      </div>
+      <div class="intake-card">
+        <div class="intake-icon">🩺</div>
+        <h3>Symptom</h3>
+        <p>What the customer says is wrong — in their own words.</p>
+      </div>
+      <div class="intake-card">
+        <div class="intake-icon">⚡</div>
+        <h3>Urgency</h3>
+        <p>Is this a rush job or routine? Parker asks.</p>
+      </div>
+      <div class="intake-card">
+        <div class="intake-icon">📋</div>
+        <h3>Delivered</h3>
+        <p>Every lead lands in Helm the moment the call ends.</p>
+      </div>
     </div>
   </div>
+</section>
 
-  <div class="delivery-wrap">
-    <h3 class="delivery-title">How You Receive Your Leads</h3>
-    <div class="delivery-grid">
-      <div class="delivery-item live">
-        <div class="delivery-status">Available Now</div>
-        <div class="delivery-method">Google Sheets</div>
-        <div class="delivery-desc">Every call logged to a shared sheet — timestamp, customer, vessel, engine, symptom, urgency. Ready to call back.</div>
+<!-- HELM SECTION -->
+<section class="section helm-section">
+  <div class="container">
+    <div class="section-tag">Your Dashboard</div>
+    <h2>Every lead lands in Helm.</h2>
+    <p class="subhead">Your dashboard. On your phone. On your desktop. No app store. No install.</p>
+    <p class="subhead">Just <span class="helm-domain">helm.talktoparker.com</span></p>
+    <div class="helm-grid">
+      <div class="helm-card">
+        <img src="helm_desktop_inbox.png" alt="Helm inbox showing five recent calls with caller names, vessels, urgency flags, and AI summaries" class="helm-screenshot-img">
+        <div class="helm-caption">The Inbox</div>
+        <p>Every call Tom answered, listed in order. Caller, vessel, concern, urgency. One tap to expand.</p>
       </div>
-      <div class="delivery-item coming">
-        <div class="delivery-status">Coming Soon</div>
-        <div class="delivery-method">SMS Alerts</div>
-        <div class="delivery-desc">Get texted the moment a lead comes in. Name, number, what they need — straight to your phone.</div>
+      <div class="helm-card">
+        <img src="helm_desktop_detail.png" alt="Helm call detail view with AI summary, contact info, vessel details, and disposition buttons" class="helm-screenshot-img">
+        <div class="helm-caption">Single Call Detail</div>
+        <p>AI summary, contact info, vessel and engine details, full transcript, disposition buttons. Everything you need before you call back.</p>
       </div>
-      <div class="delivery-item coming">
-        <div class="delivery-status">Coming Soon</div>
-        <div class="delivery-method">Email Summary</div>
-        <div class="delivery-desc">Daily digest of every call — perfect for shops that want a single morning review.</div>
+    </div>
+    <div class="helm-mobile-row">
+      <div class="helm-mobile-card">
+        <img src="helm_mobile_combined.png" alt="Helm dashboard on a phone showing the inbox and call detail view" class="helm-mobile-img">
+        <div class="helm-caption">On Your Phone</div>
+        <p>Same dashboard, designed for one-handed use while you're working in the shop. Tap any call to expand. Tap the number to call back.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="how">
-  <div class="section-label">How It Works</div>
-  <h2>Set Up Once.<br>Runs Forever.</h2>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">01</div>
-      <div class="step-title">We Configure Parker For You</div>
-      <div class="step-desc">Fill out a short form — your services, hours, tone, and how you want calls handled. We build your version of Parker before you ever hear it live.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <div class="step-title">Forward Your Number</div>
-      <div class="step-desc">Point your shop's phone to Parker. Five minutes. No hardware. No installation. Works with any carrier, any phone system.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <div class="step-title">Parker Answers</div>
-      <div class="step-desc">Every call handled like a trained marine service advisor. After hours. Weekends. Rush season. Parker is always there.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">04</div>
-      <div class="step-title">You Get The Lead</div>
-      <div class="step-desc">Every call lands in your Google Sheet. Name, number, vessel, engine, symptom. Ready to call back and book the job.</div>
+<section class="section">
+  <div class="container">
+    <div class="section-tag">How It Works</div>
+    <h2>Set up once. Runs forever.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>We configure Parker for you</h3>
+        <p>Fill out a short form — your services, hours, tone, and how you want calls handled. We build your version of Parker before you ever hear it live.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Forward your number</h3>
+        <p>Point your shop's phone to Parker. Five minutes. No hardware. No installation. Works with any carrier, any phone system.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Parker answers</h3>
+        <p>Every call handled like a trained marine service advisor. After hours. Weekends. Rush season. Parker is always there.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>Every lead lands in Helm</h3>
+        <p>Every call lands in your Helm dashboard the second it ends. Name, number, vessel, engine, symptom. Tap to call back. Tap to mark done. On your phone. Anywhere. Anytime.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- WHY MARINE -->
-<section class="why">
-  <div class="section-label">Built For This Industry</div>
-  <h2>Parker Knows Marine.<br>Generic Tools Don't.</h2>
-  <div class="why-grid">
-    <div class="why-card">
-      <h3>Speaks The Language</h3>
-      <p>Parker knows outboards from inboards. Knows what a 100-hour service is. Knows how to ask about engine hours, HIN, and symptoms a boat owner would actually describe.</p>
+<!-- BUILT FOR INDUSTRY -->
+<section class="section industry-section">
+  <div class="container">
+    <div class="section-tag">Built For This Industry</div>
+    <h2>Parker knows marine. Generic tools don't.</h2>
+    <div class="industry-grid">
+      <div class="industry-card">
+        <h3>Speaks The Language</h3>
+        <p>Parker knows outboards from inboards. Knows what a 100-hour service is. Knows how to ask about engine hours, HIN, and symptoms a boat owner would actually describe.</p>
+      </div>
+      <div class="industry-card">
+        <h3>Rush Season Ready</h3>
+        <p>Spring and summer your phone rings off the hook. Your team can't answer every call while boats are on the lift. Parker handles every call without missing a beat.</p>
+      </div>
+      <div class="industry-card">
+        <h3>Filters The Work</h3>
+        <p>Not every caller is worth your time. Parker screens for job type, urgency, and fit — so you spend your energy on the jobs that actually move your shop forward.</p>
+      </div>
+      <div class="industry-card">
+        <h3>Nothing Gets Lost</h3>
+        <p>No sticky notes. No voicemails that disappear. No customer who called three days ago that nobody followed up on. Every lead documented, every time.</p>
+      </div>
+      <div class="industry-card">
+        <h3>Customized For Your Shop</h3>
+        <p>Your services. Your hours. Your tone. Your escalation rules. Parker is configured specifically for your operation — not a generic answering service.</p>
+      </div>
+      <div class="industry-card">
+        <h3>You Own The Data</h3>
+        <p>Every customer record, every call history, every conversation transcript — yours. Export anytime. Take it with you if you ever leave. We don't hold your data hostage.</p>
+      </div>
     </div>
-    <div class="why-card">
-      <h3>Rush Season Ready</h3>
-      <p>Spring and summer your phone rings off the hook. Your team can't answer every call while boats are on the lift. Parker handles every call without missing a beat.</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Real Shops Using Parker</div>
+    <h2>Real shops using Parker right now.</h2>
+    <div class="testimonial">
+      <div class="testimonial-quote">"I just took this thing for a test ride. Sean sent me a number where he has this robot ready to be a front-end guy. Pretty intriguing. Even knowing I was talking to a bot, it wasn't evident whatsoever. It was really good at deflecting dumb-ass questions like 'what's the timing on my 1996 Optimax?' and 'my wife said the sensor is bad on our motor — what's a price to fix that?'"</div>
+      <div class="testimonial-author">Doug Dominick, Anchor Marine, Eau Claire WI</div>
+      <div class="testimonial-title">32-year marine industry veteran</div>
     </div>
-    <div class="why-card">
-      <h3>Filters The Work</h3>
-      <p>Not every caller is worth your time. Parker screens for job type, urgency, and fit — so you spend your energy on the jobs that actually move your shop forward.</p>
-    </div>
-    <div class="why-card">
-      <h3>Handles Stranded Callers</h3>
-      <p>Someone broke down on the water? Parker knows to ask, respond with urgency, and connect them with the right help — immediately.</p>
-    </div>
-    <div class="why-card">
-      <h3>Nothing Gets Lost</h3>
-      <p>No sticky notes. No voicemails that disappear. No customer who called three days ago that nobody followed up on. Every lead documented, every time.</p>
-    </div>
-    <div class="why-card">
-      <h3>Customized For Your Shop</h3>
-      <p>Your services. Your hours. Your tone. Your escalation rules. Parker is configured specifically for your operation — not a generic answering service.</p>
+    <div class="testimonial">
+      <div class="testimonial-quote">"Gave it a call — works better than mine. Liked how after we finished, I 'remembered' something and they were able to adjust and didn't hang up."</div>
+      <div class="testimonial-author">Wil Kennedy</div>
+      <div class="testimonial-title">Marine shop owner</div>
     </div>
   </div>
 </section>
 
 <!-- PRICING -->
-<section class="pricing">
-  <div class="section-label">Pricing</div>
-  <h2>One Number. Flat Rate.</h2>
-  <p class="pricing-sub">No per-minute charges. No overage fees. No surprises. Parker runs all month for one flat price.</p>
-  <div class="pricing-card">
-    <div class="pricing-badge">Founding Beta Rate</div>
-    <div class="pricing-price">$299</div>
-    <div class="pricing-period">per month — flat</div>
-    <ul class="pricing-items">
-      <li>Dedicated phone number for your shop</li>
-      <li>Custom script built for your operation</li>
-      <li>24/7 — never off, never sick, never busy</li>
-      <li>Structured intake on every call</li>
-      <li>All leads logged to Google Sheet</li>
-      <li>SMS alerts on every new lead</li>
-      <li>Setup and onboarding included</li>
-      <li>Cancel anytime</li>
-    </ul>
-    <a href="https://setup.talktoparker.com" class="btn-primary" style="display:block; text-align:center;">Set Up a Demo</a>
-    <div class="pricing-note">
-      Founding beta partners lock this rate permanently. As Parker grows, this price goes up. Early shops keep what they paid.
+<section class="section">
+  <div class="container" style="text-align: center;">
+    <div class="section-tag">Pricing</div>
+    <h2>One number. Flat rate.</h2>
+    <p class="subhead">No per-minute charges. No overage fees. No surprises. Parker runs all month for one flat price.</p>
+    <div class="pricing-card">
+      <div class="pricing-label">Founding Rate</div>
+      <div class="pricing-amount">$299</div>
+      <div class="pricing-period">per month — flat</div>
+      <ul class="pricing-list" style="text-align: left;">
+        <li>Dedicated phone number for your shop</li>
+        <li>Custom script built for your operation</li>
+        <li>24/7 — never off, never sick, never busy</li>
+        <li>Structured intake on every call</li>
+        <li>Every lead lands in Helm dashboard</li>
+        <li>Customer database builds itself over time</li>
+        <li>Setup and onboarding included</li>
+        <li>Cancel anytime</li>
+      </ul>
+      <a href="tel:4012988551" class="btn btn-primary" style="width: 100%; display: block; text-align: center;">Set Up a Demo</a>
+      <div class="pricing-note">Founding rate partners lock this price permanently. As Parker grows, this rate goes up. Early shops keep what they paid.</div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<section class="cta-section">
-  <h2>Hear <span>Parker</span><br>Right Now.</h2>
+<!-- FINAL CTA -->
+<section class="final-cta" id="demo">
+  <h2>Hear Parker right now.</h2>
   <p>Call the live demo line. Hear exactly what your customers will hear.</p>
-  <div class="cta-buttons">
-    <a href="tel:4019346296" class="btn-primary" style="font-size:17px; padding:18px 48px; letter-spacing:2px;">(401) 934-6296</a>
-    <a href="https://setup.talktoparker.com" class="btn-ghost">Set Up a Demo →</a>
+  <div class="btn-row" style="justify-content: center;">
+    <a href="tel:4019346296" class="btn btn-primary">📞 (401) 934-6296</a>
+    <a href="tel:4012988551" class="btn btn-secondary">Set Up a Demo →</a>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-brand">
-    <div class="footer-logo">PARKER</div>
-    <div class="footer-by">by Jaxtr</div>
+  <div class="container">
+    <div class="footer-wheel">⚓</div>
+    <div class="footer-name">PARKER</div>
+    <div class="footer-tagline">Marine-trained AI. Built to answer what your shop can't.</div>
+    <div class="footer-built">Built by a 30-year marine guy.</div>
   </div>
-  <p>Marine-trained AI. Built to answer what your shop can't.</p>
-  <a href="https://getjaxtr.com" target="_blank">See Jaxtr →</a>
 </footer>
 
 </body>
